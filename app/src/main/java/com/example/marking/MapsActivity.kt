@@ -1,26 +1,27 @@
 package com.example.marking
 
 import android.annotation.SuppressLint
-import android.content.ContentProviderClient
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.*
-
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.*
-import java.util.jar.Manifest
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 
-class MapsActivity(var locationCallBack: LocationCallback) : AppCompatActivity(), OnMapReadyCallback  {
+class MapsActivity(var locationCallBack: LocationCallback) :  AppCompatActivity(), OnMapReadyCallback  {
+
 
     private lateinit var mMap: GoogleMap
 
@@ -42,14 +43,20 @@ class MapsActivity(var locationCallBack: LocationCallback) : AppCompatActivity()
 
 
 
+
+
     @SuppressLint("ObsoleteSdkInt")
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
 
         //request runtime permission
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -73,6 +80,7 @@ class MapsActivity(var locationCallBack: LocationCallback) : AppCompatActivity()
             fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallBack, Looper.myLooper())
         }
     }
+
 
     private fun buildLocationCallBack() {
         locationCallBack = object : LocationCallback(){

@@ -1,27 +1,29 @@
 package com.example.marking
 
 import android.annotation.SuppressLint
+import android.content.ContentProviderClient
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Looper
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.*
+
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
+import java.util.jar.Manifest
+import android.system.Os.socket
+import kotlinx.android.synthetic.main.activity_maps.*
 
-class MapsActivity(var locationCallBack: LocationCallback) :  AppCompatActivity(), OnMapReadyCallback  {
 
+class MapsActivity () : AppCompatActivity(), OnMapReadyCallback  {
 
     private lateinit var mMap: GoogleMap
 
@@ -30,33 +32,24 @@ class MapsActivity(var locationCallBack: LocationCallback) :  AppCompatActivity(
 
     private lateinit var mLastLocation: Location
     private var mMarker: Marker?=null
-
+  private var locationCallBack : LocationCallback ?= null
 
     //Location
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     lateinit var locationRequest: LocationRequest
-    lateinit var locationCallback: LocationCallback
 
     companion object{
         private const val MY_PERMISSION_CODE: Int = 1000
     }
 
-
-
-
-
     @SuppressLint("ObsoleteSdkInt")
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
-
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
-
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-
 
         //request runtime permission
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -68,6 +61,7 @@ class MapsActivity(var locationCallBack: LocationCallback) :  AppCompatActivity(
 
 
                 fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+
                 fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallBack, Looper.myLooper())
             }
         }else{
@@ -79,8 +73,23 @@ class MapsActivity(var locationCallBack: LocationCallback) :  AppCompatActivity(
             fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
             fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallBack, Looper.myLooper())
         }
+
+        button_navigation_view.setOnNavigationItemRerselectedListener{item->
+            when(item.itemId ){
+                R.id.action_hospital -> nearByPlace("hospital")
+                R.id.action_market-> nearByPlace("market")
+                R.id.action_school -> nearByPlace("school")
+                R.id.action_restaurant -> nearByPlace("restaurant")
+
+
+            }
+        }
     }
 
+    private fun nearByPlace(typePlace: String) {
+
+
+    }
 
     private fun buildLocationCallBack() {
         locationCallBack = object : LocationCallback(){
